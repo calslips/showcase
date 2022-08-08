@@ -4,6 +4,10 @@ require('dotenv').config({ path: './config/.env' });
 const connectDB = require('./config/db');
 const { engine } = require('express-handlebars');
 const routes = require('./routes/index');
+const authRoutes = require('./routes/auth');
+const session = require('express-session');
+const passport = require('passport');
+require('./config/passport')(passport);
 
 connectDB();
 const app = express();
@@ -16,9 +20,19 @@ app.engine('.hbs', engine({ extname: '.hbs' }));
 app.set('view engine', '.hbs');
 app.set('views', './views');
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.static('public'));
 
 app.use('/', routes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 
