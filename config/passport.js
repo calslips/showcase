@@ -10,14 +10,33 @@ module.exports = function(passport) {
     scope: ['profile'],
   },
   async (accessToken, refreshToken, profile, cb) => {
-    console.log(profile);
+    const newUser = {
+      googleId: profile.id,
+      displayName: profile.displayName,
+      firstName: profile.name.givenName,
+      lastName: profile.name.familyName,
+      image: profile.photos[0].value,
+    };
+
+    try {
+      let user = await User.findOne({ googleId: profile.id });
+
+      if (user) {
+        cb(null, user);
+      } else {
+        user = await User.create(newUser);
+        cb(null, user);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }));
 
   passport.serializeUser((user, cb) => {
     process.nextTick(() => cb(null, user.id));
   });
 
-  passport.deserializeUser((user, cb) => {
+  passport.deserializeUser((id, cb) => {
     process.nextTick(() => User.findById(id, (err, user) => cb(null, user)));
   });
 }
