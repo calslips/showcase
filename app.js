@@ -6,6 +6,7 @@ const { engine } = require('express-handlebars');
 const routes = require('./routes/index');
 const authRoutes = require('./routes/auth');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
 require('./config/passport')(passport);
 
@@ -24,6 +25,9 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+  }),
 }));
 
 app.use(passport.initialize());
