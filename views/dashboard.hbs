@@ -1,3 +1,35 @@
 <h6>Dashboard</h6>
 <h3>Welcome {{name}}</h3>
 <p>Here are your showcase entries!</p>
+{{#if entries}}
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each entries}}
+        <tr>
+          <td>
+            <a href="/entries/{{_id}}">{{title}}</a>
+          </td>
+          <td>
+            {{createdAt}}
+          </td>
+          <td>
+            <span class="dash-status">{{status}}</span>
+          </td>
+          <td>
+            {{!-- implement edit & delete buttons --}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>Oops, you have no entries to showcase.</p>
+{{/if}}
