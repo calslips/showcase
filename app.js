@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const { engine } = require('express-handlebars');
 const routes = require('./routes/index');
 const authRoutes = require('./routes/auth');
+const entriesRoutes = require('./routes/entries');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
@@ -12,6 +13,9 @@ require('./config/passport')(passport);
 
 connectDB();
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -37,6 +41,7 @@ app.use(express.static('public'));
 
 app.use('/', routes);
 app.use('/auth', authRoutes);
+app.use('/entries', entriesRoutes);
 
 const PORT = process.env.PORT || 3000;
 
