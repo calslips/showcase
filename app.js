@@ -9,6 +9,7 @@ const entriesRoutes = require('./routes/entries');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
+const { formatDate } = require('./helpers/hbs');
 require('./config/passport')(passport);
 
 connectDB();
@@ -21,7 +22,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.engine('.hbs', engine({ extname: '.hbs' }));
+app.engine('.hbs', engine({ helpers: { formatDate }, extname: '.hbs' }));
 app.set('view engine', '.hbs');
 app.set('views', './views');
 
