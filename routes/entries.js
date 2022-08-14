@@ -3,6 +3,22 @@ const router = express.Router();
 const { ensureAuth } = require('../middleware/auth');
 const Entry = require('../models/Entry');
 
+// @desc    Display all public entries
+// @route   GET /entries
+router.get('/', ensureAuth, async (req, res) => {
+  try {
+    const entries = await Entry
+      .find({ status: 'public' })
+      .populate('user')
+      .sort({ createdAt: 'desc' })
+      .lean();
+    res.render('entries/index', { entries });
+  } catch (err) {
+    console.error(err);
+    res.render('error/500');
+  }
+});
+
 // @desc    Display add entry page
 // @route   GET /entries/add
 router.get('/add', ensureAuth, (req, res) => {
