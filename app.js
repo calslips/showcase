@@ -9,7 +9,7 @@ const entriesRoutes = require('./routes/entries');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
-const { formatDate, stripTags, truncate } = require('./helpers/hbs');
+const { editIcon, formatDate, stripTags, truncate } = require('./helpers/hbs');
 require('./config/passport')(passport);
 
 connectDB();
@@ -26,6 +26,7 @@ app.engine(
   '.hbs',
   engine({
     helpers: {
+      editIcon,
       formatDate,
       stripTags,
       truncate

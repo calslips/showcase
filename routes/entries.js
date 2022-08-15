@@ -12,7 +12,10 @@ router.get('/', ensureAuth, async (req, res) => {
       .populate('user')
       .sort({ createdAt: 'desc' })
       .lean();
-    res.render('entries/index', { entries });
+    res.render('entries/index', {
+      entries,
+      user: req.user,
+    });
   } catch (err) {
     console.error(err);
     res.render('error/500');
