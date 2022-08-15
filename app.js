@@ -9,7 +9,8 @@ const entriesRoutes = require('./routes/entries');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
-const { editIcon, formatDate, stripTags, truncate } = require('./helpers/hbs');
+const methodOverride = require('method-override');
+const { editIcon, formatDate, select, stripTags, truncate } = require('./helpers/hbs');
 require('./config/passport')(passport);
 
 connectDB();
@@ -17,6 +18,14 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    const method = req.body._method;
+    delete req.body._method;
+    return method;
+  }
+}));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -28,6 +37,7 @@ app.engine(
     helpers: {
       editIcon,
       formatDate,
+      select,
       stripTags,
       truncate
     },
