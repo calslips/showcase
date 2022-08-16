@@ -83,4 +83,16 @@ router.put('/:entryId', ensureAuth, async (req, res) => {
   }
 });
 
+// @desc    Delete entry
+// @route   DELETE /entries/:entryId
+router.delete('/:entryId', ensureAuth, async (req, res) => {
+  try {
+    await Entry.deleteOne({ _id: req.params.entryId });
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error(err);
+    res.render('error/500');
+  }
+});
+
 module.exports = router;

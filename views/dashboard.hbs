@@ -24,10 +24,15 @@
             <span class="dash-status">{{status}}</span>
           </td>
           <td>
-            {{!-- implement edit & delete buttons --}}
             <a href="/entries/edit/{{_id}}" class="btn btn-float">
               <i class="fas fa-edit"></i>
             </a>
+            <form action="/entries/{{_id}}" method="post" id="deleteForm">
+              <input type="hidden" name="_method" value="delete">
+              <button class="btn red">
+                <i class="fas fa-trash"></i>
+              </button>
+            </form>
           </td>
         </tr>
       {{/each}}
