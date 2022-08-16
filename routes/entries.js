@@ -22,6 +22,26 @@ router.get('/', ensureAuth, async (req, res) => {
   }
 });
 
+// @desc    Display single entry
+// @route   GET /entries/:entryId
+router.get('/:entryId', ensureAuth, async (req, res) => {
+  try {
+    const entry = await Entry.findById(req.params.entryId)
+      .populate('user')
+      .lean();
+    if (!entry) {
+      return res.render('error/404');
+    }
+    res.render('entries/display', {
+      entry,
+      user: req.user,
+    });
+  } catch (err) {
+    console.error(err);
+    res.render('error/404');
+  }
+});
+
 // @desc    Display add entry page
 // @route   GET /entries/add
 router.get('/add', ensureAuth, (req, res) => {
