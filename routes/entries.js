@@ -67,6 +67,28 @@ router.get('/edit/:entryId', ensureAuth, async (req, res) => {
   }
 });
 
+// @desc    Display a User's collection of public entries
+// @route   GET /entries/user/:userId
+router.get('/user/:userId', ensureAuth, async (req, res) => {
+  try {
+    const entries = await Entry
+      .find({
+        status: 'public',
+        user: req.params.userId,
+      })
+      .populate('user')
+      .sort({ createdAt: 'desc' })
+      .lean();
+    res.render('entries/index', {
+      entries,
+      user: req.user,
+    });
+  } catch (err) {
+    console.error(err);
+    res.render('error/500');
+  }
+});
+
 // @desc    Process form to add entry
 // @route   POST /entries
 router.post('/', ensureAuth, async (req, res) => {
